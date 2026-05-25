@@ -18,8 +18,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'api',
-    'posts',
+    'rest_framework_simplejwt',
+    'djoser',
+    'posts.apps.PostsConfig',
 ]
 
 MIDDLEWARE = [
@@ -94,7 +95,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # Включаем проверку JWT-токенов
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
