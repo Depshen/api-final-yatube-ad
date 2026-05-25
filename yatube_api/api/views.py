@@ -1,6 +1,9 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, mixins, viewsets
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly
+)
 
 from posts.models import Group, Post
 from .permissions import IsAuthorOrReadOnly
@@ -15,7 +18,6 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthorOrReadOnly,)
 
     def perform_create(self, serializer):
-        # При создании поста автором автоматически становится текущий пользователь
         serializer.save(author=self.request.user)
 
 
@@ -23,8 +25,6 @@ class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    # Группы можно только просматривать (ReadOnlyModelViewSet), 
-    # права по умолчанию из настроек (чтение для всех) здесь отлично подходят.
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -38,11 +38,11 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         post = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
-        # Сохраняем комментарий с привязкой к текущему автору и конкретному посту
         serializer.save(author=self.request.user, post=post)
 
 
-class FollowViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class FollowViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
+                    viewsets.GenericViewSet):
     serializer_class = FollowSerializer
     # Подписки доступны ТОЛЬКО авторизованным пользователям
     permission_classes = (IsAuthenticated,)

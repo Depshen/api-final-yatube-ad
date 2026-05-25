@@ -11,9 +11,13 @@ router.register('posts', PostViewSet, basename='posts')
 router.register('groups', GroupViewSet, basename='groups')
 router.register('follow', FollowViewSet, basename='follow')
 
-# Регистрируем вьюсет комментариев. 
+# Регистрируем вьюсет комментариев.
 # Обрати внимание на регулярное выражение: оно ловит id поста из ссылки
-router.register(r'posts/(?P<post_id>\d+)/comments', CommentViewSet, basename='comments')
+router.register(
+    r'posts/(?P<post_id>\d+)/comments',
+    CommentViewSet,
+    basename='comments'
+)
 
 # Подключаем сгенерированные роутером пути в urlpatterns
 urlpatterns = [
